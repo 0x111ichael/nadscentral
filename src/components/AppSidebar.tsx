@@ -75,7 +75,7 @@ export function AppSidebar({ activeSection, onSectionChange, className, isMobile
                 exit="collapsed"
                 className="text-xl font-light text-gradient-cosmic"
               >
-                1M Nads Club
+                Nads Central
               </motion.h1>
             )}
           </AnimatePresence>

@@ -59,7 +59,7 @@ const Index = () => {
         className="absolute top-8 left-0 right-0 flex justify-center items-center px-8 z-10"
       >
         <h1 className="text-2xl md:text-3xl font-light text-white tracking-wider">
-          1 Million Nads Club
+          Nads Central
         </h1>
       </motion.header>
       
@@ -84,7 +84,7 @@ const Index = () => {
           </h2>
           
           <p className="text-lg md:text-xl text-white/70 mb-12 font-light leading-relaxed max-w-lg mx-auto">
-            Access requires a 1 Million Nads SBT
+            Access requires a Nads Central SBT
           </p>
         </motion.div>
         

@@ -92,7 +92,7 @@ export default function Locked() {
           }}
           transition={{ duration: 3, repeat: Infinity }}
         >
-          1 Million Nads Club
+          Nads Central
         </motion.h1>
         <WalletConnect />
       </motion.header>

@@ -12,27 +12,27 @@ interface PageMeta {
 
 const pageMeta: Record<string, PageMeta> = {
   "/": {
-    title: "1 Million Nads Club | Exclusive Cosmic Membership Portal",
-    description: "Enter the exclusive cosmos of the 1 Million Nads Club. NFT-gated membership portal on Monad Testnet for verified holders only.",
-    keywords: "NFT, Monad, blockchain, exclusive club, cosmic, membership, testnet, Web3",
-    ogTitle: "1 Million Nads Club | The Gateway Awaits",
-    ogDescription: "Enter the exclusive cosmos of the 1 Million Nads Club. NFT-gated membership portal on Monad Testnet.",
+  title: "Nads Central | Exclusive Cosmic Membership Portal",
+  description: "Enter the exclusive cosmos of Nads Central. NFT-gated membership portal on Monad Testnet for verified holders only.",
+  keywords: "NFT, Monad, blockchain, exclusive club, cosmic, membership, testnet, Web3",
+  ogTitle: "Nads Central | The Gateway Awaits",
+  ogDescription: "Enter the exclusive cosmos of Nads Central. NFT-gated membership portal on Monad Testnet.",
     canonical: "/"
   },
   "/members": {
-    title: "Members Area | 1 Million Nads Club",
-    description: "Exclusive member dashboard for verified Nads NFT holders. Access cosmic insights, community feed, and member-only features.",
+  title: "Members Area | Nads Central",
+  description: "Exclusive member dashboard for verified Nads NFT holders. Access cosmic insights, community feed, and member-only features.",
     keywords: "members, dashboard, NFT holders, cosmic insights, community, exclusive access",
     ogTitle: "Members Area | 1 Million Nads Club",
     ogDescription: "Exclusive member dashboard for verified Nads NFT holders on Monad Testnet.",
     canonical: "/members"
   },
   "/locked": {
-    title: "Access Denied | 1 Million Nads Club",
-    description: "NFT verification required. Own a Nads NFT on Monad Testnet to access the exclusive 1 Million Nads Club membership portal.",
-    keywords: "access denied, NFT required, verification, Monad testnet, exclusive membership",
-    ogTitle: "Access Denied | 1 Million Nads Club",
-    ogDescription: "NFT verification required to access the exclusive cosmic membership portal.",
+  title: "Access Denied | Nads Central",
+  description: "NFT verification required. Own a Nads NFT on Monad Testnet to access the exclusive Nads Central membership portal.",
+  keywords: "access denied, NFT required, verification, Monad testnet, exclusive membership",
+  ogTitle: "Access Denied | Nads Central",
+  ogDescription: "NFT verification required to access the exclusive cosmic membership portal.",
     canonical: "/locked"
   }
 };
@@ -106,8 +106,8 @@ function addStructuredData() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "1 Million Nads Club",
-    "description": "Exclusive NFT-gated membership club on Monad Testnet",
+  "name": "Nads Central",
+  "description": "Exclusive NFT-gated membership club on Monad Testnet",
     "url": "https://1millionnadsclub.com",
     "sameAs": [],
     "foundingDate": "2024",
