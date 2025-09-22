@@ -41,6 +41,87 @@ export type Database = {
         }
         Relationships: []
       }
+      user_daily_stats: {
+        Row: {
+          created_at: string
+          current_points: number
+          current_streak: number
+          daily_points: number
+          id: string
+          last_interaction_date: string | null
+          longest_streak: number
+          total_earned: number
+          total_spent: number
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          current_points?: number
+          current_streak?: number
+          daily_points?: number
+          id?: string
+          last_interaction_date?: string | null
+          longest_streak?: number
+          total_earned?: number
+          total_spent?: number
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          current_points?: number
+          current_streak?: number
+          daily_points?: number
+          id?: string
+          last_interaction_date?: string | null
+          longest_streak?: number
+          total_earned?: number
+          total_spent?: number
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      user_quest_interactions: {
+        Row: {
+          completed_at: string
+          created_at: string
+          daily_points: number
+          id: string
+          interaction_type: string
+          points_earned: number
+          quest_id: number
+          streak_count: number
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          completed_at?: string
+          created_at?: string
+          daily_points?: number
+          id?: string
+          interaction_type: string
+          points_earned: number
+          quest_id: number
+          streak_count?: number
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          completed_at?: string
+          created_at?: string
+          daily_points?: number
+          id?: string
+          interaction_type?: string
+          points_earned?: number
+          quest_id?: number
+          streak_count?: number
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
