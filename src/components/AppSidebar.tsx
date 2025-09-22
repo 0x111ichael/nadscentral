@@ -10,20 +10,25 @@ import {
   X 
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useUserStats } from "@/hooks/use-user-stats";
+import { useQuestCount } from "@/hooks/use-quest-count";
 import { motion, AnimatePresence } from "framer-motion";
+
+type IconComponent = typeof Home | typeof Newspaper | typeof BarChart3 | typeof CheckSquare | typeof Trophy;
 
 interface NavigationItem {
   title: string;
-  icon: typeof Home;
+  icon: IconComponent;
   id: string;
   badge?: number;
 }
 
-const navigationItems: NavigationItem[] = [
+// Navigation items will be built dynamically to allow live badge count
+const baseNavigationItems: NavigationItem[] = [
   { title: "Dashboard", icon: Home, id: "dashboard" },
   { title: "Feed", icon: Newspaper, id: "feed" },
   { title: "Stats", icon: BarChart3, id: "stats" },
-  { title: "Quest Board", icon: CheckSquare, id: "quests", badge: 3 },
+  { title: "Quest Board", icon: CheckSquare, id: "quests" },
   { title: "Leaderboard", icon: Trophy, id: "leaderboard" },
 ];
 
@@ -37,6 +42,8 @@ interface AppSidebarProps {
 export function AppSidebar({ activeSection, onSectionChange, className, isMobile = false }: AppSidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
+  const { data: stats, isLoading: statsLoading } = useUserStats();
+  const { count: questCount, loading: questLoading } = useQuestCount();
 
   const sidebarVariants = {
     expanded: { width: 280 },
@@ -106,12 +113,13 @@ export function AppSidebar({ activeSection, onSectionChange, className, isMobile
       )}
 
       {/* Navigation */}
-      <nav className={cn("flex-1", isCollapsed ? "p-2" : "px-4 py-6")}>
+      <nav className={cn("flex-1", isCollapsed ? "p-2" : "px-4 py-6")}> 
         <div className="space-y-1">
-          {navigationItems.map((item) => {
+          {baseNavigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
-            
+            // Only show badge for Quest Board
+            const badge = item.id === "quests" ? questCount : undefined;
             return (
               <button
                 key={item.id}
@@ -131,7 +139,6 @@ export function AppSidebar({ activeSection, onSectionChange, className, isMobile
                   isCollapsed ? "mx-auto" : "mr-3",
                   isActive ? "text-primary" : "group-hover:text-primary transition-colors"
                 )} />
-                
                 <AnimatePresence mode="wait">
                   {(!isCollapsed || isMobile) && (
                     <motion.div
@@ -144,15 +151,14 @@ export function AppSidebar({ activeSection, onSectionChange, className, isMobile
                       <span className="font-light text-sm">
                         {item.title}
                       </span>
-                      
                       {/* Badge - only show when not collapsed */}
-                      {item.badge && (
+                      {badge !== undefined && badge !== null && badge > 0 && (
                         <motion.span
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
                           className="bg-primary text-white text-xs px-2 py-1 rounded-full font-medium ml-auto"
                         >
-                          {item.badge}
+                          {badge}
                         </motion.span>
                       )}
                     </motion.div>
@@ -165,7 +171,7 @@ export function AppSidebar({ activeSection, onSectionChange, className, isMobile
       </nav>
 
       {/* Footer */}
-      <div className={cn("border-t border-white/10", isCollapsed ? "p-2" : "px-4 py-4")}>
+      <div className={cn("border-t border-white/10", isCollapsed ? "p-2" : "px-4 py-4")}> 
         <div className={cn(
           "flex items-center",
           isCollapsed ? "justify-center" : "px-4"
@@ -173,7 +179,6 @@ export function AppSidebar({ activeSection, onSectionChange, className, isMobile
           <div className="w-8 h-8 bg-gradient-cosmic rounded-full flex items-center justify-center flex-shrink-0">
             <span className="text-xs font-bold text-white">N</span>
           </div>
-          
           <AnimatePresence mode="wait">
             {(!isCollapsed || isMobile) && (
               <motion.div
@@ -184,7 +189,9 @@ export function AppSidebar({ activeSection, onSectionChange, className, isMobile
                 className="ml-3 flex-1"
               >
                 <div className="text-sm font-light text-white">Nad Score</div>
-                <div className="text-xs text-primary font-light">1,337 pts</div>
+                <div className="text-xs text-primary font-light">
+                  {statsLoading ? '...' : stats?.current_points?.toLocaleString() ?? '0'} pts
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

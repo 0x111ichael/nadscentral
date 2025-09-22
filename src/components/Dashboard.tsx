@@ -1,110 +1,74 @@
-import { useActiveAccount, useReadContract } from "thirdweb/react";
-import { getContract } from "thirdweb";
-import { balanceOf } from "thirdweb/extensions/erc721";
-import { client, monadTestnet, NADS_CONTRACT_ADDRESS } from "@/lib/thirdweb";
+import { useUserStats } from "@/hooks/use-user-stats";
+import { useQuestInteractions } from "@/hooks/use-quest-interactions";
+import { useUserProfileContext } from "@/contexts/UserProfileContext";
+import { motion } from "framer-motion";
 import { CosmicCard } from "./CosmicCard";
 import { CosmicButton } from "./CosmicButton";
-import { 
-  Zap, 
-  Globe, 
-  Rocket, 
-  TrendingUp, 
-  Calendar, 
-  Star,
-  Award,
-  Users,
-  Activity,
-  Trophy
-} from "lucide-react";
-import { motion } from "framer-motion";
-
-const contract = getContract({
-  client,
-  chain: monadTestnet,
-  address: NADS_CONTRACT_ADDRESS,
-});
+import { Award, Zap, Users, Activity, Star, Calendar, Globe, TrendingUp } from "lucide-react";
+// ...existing code...
 
 export function Dashboard() {
-  const account = useActiveAccount();
-  
-  const { data: balance } = useReadContract(
-    balanceOf,
-    {
-      contract,
-      owner: account?.address || "",
-    }
-  );
+  const { profile } = useUserProfileContext();
+  const { data: stats, isLoading: statsLoading } = useUserStats();
+  const { data: questInteractions, isLoading: questLoading } = useQuestInteractions();
 
   const dashboardStats = [
     {
       icon: Zap,
-      value: "1,337",
+      value: stats?.current_points?.toLocaleString() || "0",
       label: "Nad Score",
-      change: "+87 this week",
+      change: `+${stats?.daily_points || 0} today`,
       color: "text-primary"
     },
     {
       icon: Award,
-      value: "12",
+      value: questInteractions?.length?.toString() || "0",
       label: "Quests Completed",
-      change: "+3 this week",
+      change: `+${questInteractions?.filter(q => q.interaction_type === 'completed').length || 0} this week`,
       color: "text-secondary"
     },
     {
       icon: Users,
-      value: "#42",
+      value: "#--",
       label: "Leaderboard Rank",
-      change: "↑5 positions",
+      change: "--",
       color: "text-accent"
     },
     {
       icon: Activity,
-      value: "7",
+      value: stats?.current_streak?.toString() || "0",
       label: "Day Streak",
-      change: "Keep it up!",
+      change: `Longest: ${stats?.longest_streak || 0}`,
       color: "text-green-400"
     }
   ];
 
-  const recentActivity = [
-    {
-      type: "quest",
-      title: "Completed Daily Check-in",
-      time: "2 hours ago",
-      points: 25,
-      icon: Star
-    },
-    {
-      type: "social",
-      title: "Connected Twitter Account",
-      time: "1 day ago",
-      points: 50,
-      icon: Globe
-    },
-    {
-      type: "achievement",
-      title: "Reached 1,000 Nad Score",
-      time: "2 days ago",
-      points: 100,
-      icon: Trophy
-    }
-  ];
+  const recentActivity = questInteractions?.slice(0, 5).map(q => ({
+    type: q.interaction_type,
+    title: `Quest #${q.quest_id}`,
+    time: new Date(q.completed_at).toLocaleString(),
+    points: q.points_earned,
+    icon: Star // You can map to different icons based on type
+  })) || [];
 
-  const upcomingQuests = [
-    {
-      title: "Vote on Community Proposal",
-      deadline: "2 days left",
-      points: 75,
-      difficulty: "Easy"
-    },
-    {
-      title: "Invite 3 Cosmic Explorers",
-      deadline: "5 days left",
-      points: 150,
-      difficulty: "Medium"
-    }
-  ];
+  if (statsLoading || questLoading) {
+    return (
+      <div className="space-y-8">
+        <div className="text-center py-8">
+          <motion.h1 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl md:text-4xl font-light text-gradient-cosmic mb-4"
+          >
+            Welcome back, Cosmic Explorer
+          </motion.h1>
+          <p className="text-muted-foreground text-lg">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
+  // ...existing UI rendering code for dashboardStats, recentActivity, etc...
   return (
     <div className="space-y-8">
       {/* Welcome Header */}
@@ -120,7 +84,6 @@ export function Dashboard() {
           Continue your journey through the Monad nebula
         </p>
       </div>
-
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {dashboardStats.map((stat, index) => {
@@ -142,7 +105,6 @@ export function Dashboard() {
           );
         })}
       </div>
-
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Recent Activity */}
@@ -151,7 +113,6 @@ export function Dashboard() {
             <Activity className="w-5 h-5 text-primary" />
             Recent Activity
           </h3>
-          
           <div className="space-y-4">
             {recentActivity.map((activity, index) => {
               const Icon = activity.icon;
@@ -170,41 +131,40 @@ export function Dashboard() {
             })}
           </div>
         </CosmicCard>
-
         {/* Upcoming Quests */}
         <CosmicCard className="p-6">
           <h3 className="text-xl font-light text-white mb-6 flex items-center gap-2">
             <Calendar className="w-5 h-5 text-secondary" />
             Upcoming Quests
           </h3>
-          
           <div className="space-y-4">
-            {upcomingQuests.map((quest, index) => (
-              <div key={index} className="p-4 rounded-lg border border-white/10 bg-white/5">
-                <div className="flex items-start justify-between mb-2">
-                  <h4 className="font-light text-white">{quest.title}</h4>
-                  <span className="text-sm text-primary font-light">+{quest.points}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">{quest.deadline}</span>
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    quest.difficulty === "Easy" ? "bg-green-400/20 text-green-400" :
-                    quest.difficulty === "Medium" ? "bg-yellow-400/20 text-yellow-400" :
-                    "bg-red-400/20 text-red-400"
-                  }`}>
-                    {quest.difficulty}
-                  </span>
-                </div>
+            {/* TODO: Replace with real upcoming quests if available */}
+            <div className="p-4 rounded-lg border border-white/10 bg-white/5">
+              <div className="flex items-start justify-between mb-2">
+                <h4 className="font-light text-white">Vote on Community Proposal</h4>
+                <span className="text-sm text-primary font-light">+75</span>
               </div>
-            ))}
-            
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">2 days left</span>
+                <span className="px-2 py-1 rounded-full text-xs bg-green-400/20 text-green-400">Easy</span>
+              </div>
+            </div>
+            <div className="p-4 rounded-lg border border-white/10 bg-white/5">
+              <div className="flex items-start justify-between mb-2">
+                <h4 className="font-light text-white">Invite 3 Cosmic Explorers</h4>
+                <span className="text-sm text-primary font-light">+150</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">5 days left</span>
+                <span className="px-2 py-1 rounded-full text-xs bg-yellow-400/20 text-yellow-400">Medium</span>
+              </div>
+            </div>
             <CosmicButton variant="outline" className="w-full">
               View All Quests
             </CosmicButton>
           </div>
         </CosmicCard>
       </div>
-
       {/* Quick Actions */}
       <CosmicCard className="p-6">
         <h3 className="text-xl font-light text-white mb-6">Quick Actions</h3>

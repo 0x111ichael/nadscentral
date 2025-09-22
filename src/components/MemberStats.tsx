@@ -1,51 +1,42 @@
-import { useActiveAccount, useReadContract } from "thirdweb/react";
-import { getContract } from "thirdweb";
-import { balanceOf } from "thirdweb/extensions/erc721";
-import { client, monadTestnet, NADS_CONTRACT_ADDRESS } from "@/lib/thirdweb";
 import { CosmicCard } from "./CosmicCard";
 import { Zap, Globe, Rocket } from "lucide-react";
-
-const contract = getContract({
-  client,
-  chain: monadTestnet,
-  address: NADS_CONTRACT_ADDRESS,
-});
+import { useUserStats } from "@/hooks/use-user-stats";
 
 export function MemberStats() {
-  const account = useActiveAccount();
-  
-  const { data: balance } = useReadContract(
-    balanceOf,
-    {
-      contract,
-      owner: account?.address || "",
-    }
-  );
+  const { data: stats, isLoading } = useUserStats();
 
-  const stats = [
+  if (isLoading) {
+    return <div className="text-center text-muted-foreground">Loading stats...</div>;
+  }
+
+  if (!stats) {
+    return <div className="text-center text-muted-foreground">No stats found.</div>;
+  }
+
+  const statCards = [
     {
       icon: Zap,
-      value: "∞",
-      label: "Cosmic Power",
+      value: stats.current_points?.toLocaleString() ?? "0",
+      label: "Nad Points",
       color: "text-accent"
     },
     {
       icon: Globe,
-      value: "Monad",
-      label: "Home Chain",
+      value: stats.current_streak?.toString() ?? "0",
+      label: "Current Streak",
       color: "text-secondary"
     },
     {
       icon: Rocket,
-      value: "Active",
-      label: "Explorer Status",
+      value: stats.longest_streak?.toString() ?? "0",
+      label: "Longest Streak",
       color: "text-primary"
     }
   ];
 
   return (
     <>
-      {stats.map((stat, index) => {
+      {statCards.map((stat, index) => {
         const Icon = stat.icon;
         return (
           <CosmicCard key={index} className="text-center group p-4 md:p-6">

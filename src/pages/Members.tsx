@@ -14,6 +14,9 @@ import { MobileNav } from "@/components/MobileNav";
 import { Web3ErrorBoundary } from "@/components/Web3ErrorBoundary";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useUserProfileContext } from "@/contexts/UserProfileContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useUserStats } from "@/hooks/use-user-stats";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +31,7 @@ export default function Members() {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("dashboard");
   const isMobile = useIsMobile();
-
+  const { profile } = useUserProfileContext();
   const { data: balance, isLoading, error } = useReadContract(
     balanceOf,
     {
@@ -37,12 +40,28 @@ export default function Members() {
     }
   );
 
+  // Auto-create user_daily_stats row if missing
+  useEffect(() => {
+    const ensureUserStats = async () => {
+      if (profile?.wallet_address) {
+        const { data, error } = await supabase
+          .from('user_daily_stats')
+          .select('id')
+          .eq('wallet_address', profile.wallet_address)
+          .maybeSingle();
+        if (!data) {
+          await supabase.from('user_daily_stats').insert({ wallet_address: profile.wallet_address });
+        }
+      }
+    };
+    ensureUserStats();
+  }, [profile?.wallet_address]);
+
   useEffect(() => {
     if (!account) {
       navigate("/");
       return;
     }
-
     if (!isLoading && balance !== undefined && balance === 0n) {
       navigate("/locked");
     }
@@ -72,7 +91,6 @@ export default function Members() {
         return <Dashboard />;
     }
   };
-
 
   // Wrap all Web3-dependent UI in Web3ErrorBoundary for granular error handling
   return (
@@ -174,55 +192,5 @@ export default function Members() {
         </div>
       )}
     </Web3ErrorBoundary>
-  );
-
-  return (
-    <div className="relative min-h-screen bg-black">
-      <EnhancedStarfield />
-      
-      <div className="flex relative">
-        {/* Mobile Navigation */}
-        {isMobile && (
-          <MobileNav 
-            activeSection={activeSection} 
-            onSectionChange={setActiveSection} 
-          />
-        )}
-
-        {/* Desktop Sidebar */}
-        {!isMobile && (
-          <AppSidebar 
-            activeSection={activeSection} 
-            onSectionChange={setActiveSection} 
-          />
-        )}
-        
-        {/* Main Content */}
-        <main className={cn(
-          "flex-1 min-h-screen",
-          isMobile ? "w-full" : "ml-80"
-        )}>
-          {/* Transparent Header */}
-          <header className={cn(
-            "relative z-10 flex justify-between items-center px-8 py-6 border-b border-white/10 bg-black/20 backdrop-blur-sm",
-            isMobile ? "mt-16" : ""
-          )}>
-            <h1 className="text-xl font-light text-gradient-cosmic">
-              Cosmic Dashboard
-            </h1>
-            <WalletConnect />
-          </header>
-          
-          {/* Content Area - Centered with equal margins */}
-          <div className="relative z-10 flex-1 flex flex-col">
-            <div className="flex-1 px-8 py-8">
-              <div className="max-w-6xl mx-auto w-full">
-                {renderContent()}
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
   );
 }
