@@ -2,104 +2,281 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* ================================= */
+/*         COSMIC DESIGN SYSTEM      */
+/* ================================= */
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+:root {
+  /* Momentum-Inspired Serene Palette */
+  --background: 0 0% 0%;              /* Pure cosmic black #000000 */
+  --foreground: 0 0% 100%;            /* Pure white text #FFFFFF */
+  --surface: 0 0% 2%;                 /* Slightly elevated surface */
+  
+  /* Primary Cosmic Purple - Refined */
+  --primary: 270 91% 65%;             /* #A855F7 */
+  --primary-foreground: 0 0% 100%;    /* Pure white */
+  --primary-glow: 270 91% 75%;        /* #C084FC */
+  --primary-light: 270 91% 85%;
+  
+  /* Secondary Cosmic Blue - Refined */
+  --secondary: 217 91% 60%;           /* #3B82F6 */
+  --secondary-foreground: 0 0% 100%;  /* Pure white */
+  --secondary-glow: 217 91% 70%;      /* #60A5FA */
+  --secondary-light: 217 91% 80%;
+  
+  /* Minimal Neutral System */
+  --muted: 0 0% 10%;                  /* Dark muted */
+  --muted-foreground: 0 0% 60%;       /* Medium gray text */
+  --accent: 270 91% 65%;
+  --accent-foreground: 0 0% 100%;
+  
+  /* Ultra-Minimal UI Elements */
+  --border: 0 0% 10%;                 /* Very subtle borders */
+  --input: 0 0% 5%;
+  --ring: 270 91% 65%;
+  --card: 0 0% 2%;                    /* Barely elevated cards */
+  --card-foreground: 0 0% 100%;
+  --card-glow: 270 91% 65%;
+  --popover: 0 0% 2%;
+  --popover-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  
+  /* Premium Glass System */
+  --glass: 255 255 255 / 0.05;        /* Ultra-subtle white glass */
+  --glass-strong: 255 255 255 / 0.10;
+  --barrier: 270 91% 65% / 0.1;
+  --unlock: 270 91% 75% / 0.9;
+  
+  /* Serene Gradients */
+  --gradient-cosmic: linear-gradient(135deg, hsl(270 91% 65%), hsl(217 91% 60%));
+  --gradient-hero: linear-gradient(180deg, hsl(0 0% 0%), hsl(0 0% 2%));
+  --gradient-glow: radial-gradient(circle at 50% 50%, hsl(270 91% 65% / 0.15) 0%, transparent 70%);
+  
+  /* Glassmorphism Shadows - Subtle and Professional */
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --shadow-glass-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+  --shadow-interactive: 0 4px 16px 0 rgba(0, 0, 0, 0.25);
+  
+  /* Smooth Interactions */
+  --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius: 1rem;
+}
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+/* ================================= */
+/*           BASE STYLES             */
+/* ================================= */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+* {
+  @apply border-border;
+}
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+/* Mobile-first responsive scaling */
+@media (min-width: 768px) {
+  html { font-size: 18px; }
+}
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+@media (min-width: 1024px) {
+  html { font-size: 20px; }
+}
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+body {
+  @apply bg-background text-foreground font-inter antialiased;
+  background: 
+    radial-gradient(circle at 25% 75%, hsl(270 91% 5% / 0.4) 0%, transparent 60%),
+    radial-gradient(circle at 75% 25%, hsl(217 91% 5% / 0.4) 0%, transparent 60%),
+    hsl(var(--background));
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-weight: 300; /* Default to light weight for serene feel */
+}
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+/* Responsive Grid Pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.02) 1px, transparent 0);
+  background-size: 30px 30px;
+  pointer-events: none;
+  z-index: 1;
+}
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+@media (min-width: 768px) {
+  body::before {
+    background-size: 40px 40px;
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+@media (min-width: 1024px) {
+  body::before {
+    background-size: 50px 50px;
   }
+}
 
-  body {
-    @apply bg-background text-foreground;
+/* ================================= */
+/*        RESPONSIVE COMPONENTS      */
+/* ================================= */
+
+/* Professional Glassmorphism System */
+.glass {
+  @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl;
+  @apply transition-all duration-300;
+  box-shadow: var(--shadow-glass), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass:hover {
+  @apply border-white/20;
+  box-shadow: var(--shadow-glass-hover), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+.glass-strong {
+  @apply bg-white/[0.08] backdrop-blur-2xl border border-white/[0.15] rounded-xl;
+  @apply transition-all duration-300;
+  box-shadow: var(--shadow-glass-hover), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Refined Button System - Light Theme */
+.btn-cosmic {
+  @apply relative overflow-hidden;
+  @apply bg-gradient-to-r from-primary to-secondary;
+  @apply text-primary-foreground font-light;
+  @apply border border-primary/20 rounded-xl;
+  @apply transition-all duration-300;
+  @apply focus:outline-none focus:ring-4 focus:ring-primary/40;
+  @apply hover:border-primary/40;
+}
+
+.btn-cosmic-outline {
+  @apply relative overflow-hidden;
+  @apply bg-transparent text-primary font-light;
+  @apply border-2 border-primary/60 rounded-xl;
+  @apply transition-all duration-300;
+  @apply hover:bg-primary/5 hover:border-primary;
+}
+
+/* Responsive Text System - Light and Clean */
+.text-gradient-cosmic {
+  @apply bg-gradient-to-r from-primary-glow to-secondary-glow bg-clip-text text-transparent;
+}
+
+.text-glow {
+  text-shadow: 0 0 15px hsl(var(--primary-glow) / 0.3);
+}
+
+/* Responsive Card System - Glassmorphism */
+.card-cosmic {
+  @apply glass p-4 md:p-6 lg:p-8;
+  @apply transition-all duration-300;
+  @apply hover:scale-[1.01] hover:border-primary/20;
+}
+
+/* Premium Hover Effects - Subtle and Professional */
+.hover-magnetic {
+  @apply transition-transform duration-200;
+  @apply hover:scale-[1.02] active:scale-100;
+  @apply focus:scale-[1.02];
+}
+
+@media (hover: hover) {
+  .hover-magnetic:hover {
+    @apply scale-[1.02];
+  }
+}
+
+/* ================================= */
+/*     REFINED RESPONSIVE UTILITIES  */
+/* ================================= */
+
+/* Mobile-first typography - Lighter weights for consistency */
+.heading-massive {
+  @apply text-4xl font-extralight leading-none tracking-wide;
+  @apply md:text-6xl lg:text-7xl xl:text-8xl;
+}
+
+.heading-large {
+  @apply text-3xl font-light leading-tight tracking-wide;
+  @apply md:text-4xl lg:text-5xl xl:text-6xl;
+}
+
+.heading-medium {
+  @apply text-xl font-light leading-snug tracking-wide;
+  @apply md:text-2xl lg:text-3xl;
+}
+
+/* Responsive text sizes - Consistent with light theme */
+.text-responsive {
+  @apply text-base font-light md:text-lg lg:text-xl;
+}
+
+.text-responsive-small {
+  @apply text-sm font-light md:text-base lg:text-lg;
+}
+
+.text-responsive-large {
+  @apply text-lg font-light md:text-xl lg:text-2xl xl:text-3xl;
+}
+
+/* Optimized spacing system */
+.space-mobile {
+  @apply space-y-4 md:space-y-6 lg:space-y-8;
+}
+
+.padding-responsive {
+  @apply p-4 md:p-6 lg:p-8 xl:p-12;
+}
+
+/* Touch-friendly targets */
+.touch-target {
+  @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+}
+
+/* Responsive grid system */
+.grid-responsive {
+  @apply grid gap-4 md:gap-6 lg:gap-8;
+  @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+}
+
+/* Professional hover effects */
+.hover-magnetic {
+  @apply transition-transform duration-200;
+  @apply hover:scale-[1.02] active:scale-100;
+  @apply focus:scale-[1.02];
+}
+
+@media (hover: hover) {
+  .hover-magnetic:hover {
+    @apply scale-[1.02];
+  }
+}
+
+/* Ensure proper mobile behavior */
+@media (max-width: 767px) {
+  button, a {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  .text-8xl { @apply text-5xl; }
+  .text-7xl { @apply text-4xl; }
+  .text-6xl { @apply text-3xl; }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

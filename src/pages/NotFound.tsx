@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
+// Ensure NotFound page is minimal and functional for MVP
 const NotFound = () => {
   const location = useLocation();
 

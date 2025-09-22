@@ -1,0 +1,30 @@
+{
+  "name": "1 Million Nads Club",
+  "short_name": "Nads Club",
+  "description": "Exclusive NFT-gated membership portal on Monad Testnet",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#0A0A0A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["entertainment", "social", "finance"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Members Area",
+      "short_name": "Members",
+      "description": "Access the exclusive members area",
+      "url": "/members",
+      "icons": [{ "src": "/favicon.ico", "sizes": "any" }]
+    }
+  ]
+}
